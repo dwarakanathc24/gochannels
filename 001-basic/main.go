@@ -8,7 +8,8 @@ func main() {
 	odd := make(chan int)
 	quit := make(chan int)
 
-	send(even, odd, quit)
+	go send(even, odd, quit)
+	receive(even, odd, quit)
 
 }
 
@@ -24,11 +25,18 @@ func send(e, o, q chan<- int) {
 
 }
 
-func receive(e, o, q <-chan int){
-	for{
-		select{
-		case v:=<-e
-		
+func receive(e, o, q <-chan int) {
+	for {
+		select {
+		case v := <-e:
+			fmt.Println(" the even numbers are ", v)
+		case v := <-o:
+			fmt.Println(" the odd numbers are ", v)
+		case v := <-q:
+			fmt.Println(" the quit numbers are ", v)
+			return
 		}
+
 	}
+
 }
